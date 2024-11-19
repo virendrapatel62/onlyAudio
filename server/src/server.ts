@@ -4,6 +4,7 @@ import { logger } from "./utils/logger";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import cors from "cors";
+import { SocketEvents } from "./utils/socket-events";
 
 const app = express();
 
@@ -26,7 +27,7 @@ app.all("/ping", (request, response) => {
   response.json("pong");
 });
 
-io.on("connect", () => {
+io.on(SocketEvents.connect, () => {
   logger.info("New Socket connection..");
 });
 

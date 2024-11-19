@@ -1,6 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-import Peer from "simple-peer";
-import ReactAudioPlayer from "react-audio-player";
+import { useEffect, useRef, useState } from "react";
 
 let peerConfiguration = {
   iceServers: [
@@ -71,7 +69,7 @@ export default function Playground() {
   };
   console.log({ offer });
 
-  const handleOfferChange = async (e) => {
+  const handleOfferChange = async (e: any) => {
     const offer = JSON.parse(e.target.value?.trim());
 
     const userMedia = await navigator.mediaDevices.getUserMedia({
@@ -92,7 +90,7 @@ export default function Playground() {
     answer && setAnswer(answer);
   };
 
-  const handleAnswer = (e) => {
+  const handleAnswer = (e: any) => {
     const answer = JSON.parse(e.target.value);
     peerConnection?.setRemoteDescription(answer);
     console.log(peerConnection?.currentRemoteDescription);
