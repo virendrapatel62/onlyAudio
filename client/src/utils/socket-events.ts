@@ -7,10 +7,13 @@ export const SocketEvents = {
   onOffer: "onoffer",
   onAnswer: "onanswer",
   onIceCandidate: "onincecandidate",
+  onGoLive: "ongolive",
+  onAskForOffer: "onaskforoffer",
 
   onCall: "oncall",
   onHangup: "onhangup",
   onWaiting: "onwaiting",
   onJoin: "onjoin",
   onWaitEnd: "onwaitend",
+  onActiveCrators: "onactivecreators",
 };

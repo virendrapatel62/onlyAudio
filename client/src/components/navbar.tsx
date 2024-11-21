@@ -17,14 +17,17 @@ export default function Navbar() {
   ];
 
   return (
-    <div>
+    <header className="px-4 py-2 shadow shadow-gray-700">
       <ul className="flex flex-wrap gap-4">
         {pages.map((page) => (
-          <li className="hover:bg-slate-200 p-2 rounded" key={page.link}>
+          <li
+            className="hover:bg-slate-200 hover:text-slate-700 p-2 rounded cursor-pointer"
+            key={page.link}
+          >
             <Link to={page.link}>{page.title}</Link>
           </li>
         ))}
       </ul>
-    </div>
+    </header>
   );
 }
