@@ -1,13 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Code+Latin:wdth,wght@100..125,311&family=Raleway:ital,wght@0,100..900;1,100..900&family=Varela+Round&display=swap");
+
 @import url("https://fonts.googleapis.com/css2?family=M+PLUS+Code+Latin:wght@100...700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Code+Latin:wdth,wght@100..125,311&family=Raleway:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Varela+Round&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  font-family: "M PLUS Code Latin", monospace;
+  font-weight: 500;
   font-optical-sizing: auto;
-  font-weight: 400;
   font-style: normal;
+
+  font-family: "Raleway", serif;
+  /* font-family: "M PLUS Code Latin", serif; */
+  /* font-family: "Source Code Pro", monospace; */
 }
 
 @layer base {

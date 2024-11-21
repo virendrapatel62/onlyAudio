@@ -1,28 +1,40 @@
+import { AudioWaveform, DicesIcon, PodcastIcon, RadioIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const pages = [
     {
+      link: "/",
+      title: (
+        <AudioWaveform size={48} className="text-orange-400 hover:scale-120" />
+      ),
+      hoverTitle: "Home",
+    },
+    {
       link: "/go-live",
-      title: "👉 Go Live",
+      title: <RadioIcon />,
+      hoverTitle: "Go Live",
     },
     {
       link: "/playground",
-      title: "👉 Playground",
+      title: <DicesIcon />,
+      hoverTitle: "Playground",
     },
     {
       link: "/my-creators",
-      title: "👉 My Creators",
+      title: <PodcastIcon />,
+      hoverTitle: "My Creators",
     },
   ];
 
   return (
-    <header className="px-4 py-2 shadow shadow-gray-700">
-      <ul className="flex flex-wrap gap-4">
+    <header className="p-8">
+      <ul className="flex flex-wrap gap-4 items-center">
         {pages.map((page) => (
           <li
-            className="hover:bg-slate-200 hover:text-slate-700 p-2 rounded cursor-pointer"
+            className="hover:text-slate-100 hover:scale-125 p-2 rounded cursor-pointer transition-all duration-300"
             key={page.link}
+            title={page.hoverTitle}
           >
             <Link to={page.link}>{page.title}</Link>
           </li>
