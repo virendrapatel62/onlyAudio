@@ -2,7 +2,7 @@ import express from "express";
 
 const pingRouter = express.Router();
 
-pingRouter.all("/ping", (request, response) => {
+pingRouter.all("/ping", (_, response) => {
   response.json("pong");
 });
 

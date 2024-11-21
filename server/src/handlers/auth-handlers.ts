@@ -16,7 +16,7 @@ router.post("/signup", async (request: Request, response: Response) => {
   const body = authSignupBodySchema.validateSync(request.body, {
     abortEarly: false,
   });
-  const { firstName, lastName, username, email, password } = body;
+  const { username, email, password } = body;
   const userExists = await User.findOne({ email });
   if (userExists) {
     response.status(400).json({ message: "User already exists" });
@@ -25,8 +25,6 @@ router.post("/signup", async (request: Request, response: Response) => {
 
   // Create a new user
   const newUser = new User({
-    firstName,
-    lastName,
     username,
     email,
     password,
