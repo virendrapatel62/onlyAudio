@@ -1,3 +1,4 @@
+import SpeakingHightlights from "@/components/home/speaking-highlights";
 import { useIsAuthenticated, useUser } from "@/stores/auth-store";
 import { Hand } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -19,6 +20,7 @@ export default function HomePage() {
 
   return (
     <div>
+      <SpeakingHightlights />
       <div className="h-[70vh] flex flex-col gap-12 items-center justify-center p-4">
         <h1 className="text-4xl text-center tracking-wider font-bold leading-tight">
           friends over followers

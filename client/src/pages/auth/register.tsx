@@ -1,10 +1,61 @@
 import { Button } from "@/components/ui/button";
 import InputGroup from "@/components/ui/input-group";
-import { useIsAuthenticated } from "@/stores/auth-store";
+import { useAuthStore, useIsAuthenticated } from "@/stores/auth-store";
+import { useUserRegistrationStore } from "@/stores/registration-store";
+import { toSimpleObject } from "@/utils/yup";
+import { FormEventHandler, useEffect } from "react";
 import { Link, Navigate } from "react-router-dom";
+import * as yup from "yup";
+import { useFormik } from "formik";
+import { IRegisterParams } from "@/api/auth";
+import ErrorAlert from "@/components/ui/error-alert";
+
+const formDataValidationSchema = yup.object().shape({
+  email: yup.string().email().required().label("Email"),
+  username: yup.string().min(4).required().label("Username"),
+  password: yup
+    .string()
+    .min(6, "Password must be at least 6 characters long.")
+    .required()
+    .label("Password"),
+
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password")], "Passwords must match.")
+    .required()
+    .label("Confirm password"),
+});
 
 export default function RegisterPage() {
   const isAuthenticated = useIsAuthenticated();
+  const store = useUserRegistrationStore();
+  const { login } = useAuthStore();
+
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+      username: "",
+    },
+    validationSchema: formDataValidationSchema,
+    onSubmit(values, formikHelpers) {
+      const _values: any = {
+        ...values,
+      };
+      delete _values.confirmPassword;
+      store.register(_values);
+    },
+  });
+
+  useEffect(() => {
+    store.formValues &&
+      login(store.formValues.email, store.formValues.password); // login & move to home page
+  }, [store.registered]);
+
+  const getError = (name: keyof typeof formik.initialValues) => {
+    if (formik.touched[name]) return formik.errors[name];
+  };
 
   if (isAuthenticated) {
     return <Navigate to={"/"} />;
@@ -21,39 +72,58 @@ export default function RegisterPage() {
       <div className="m-4"></div>
 
       <div className="mt-4 m-4">
-        <form>
+        <form onSubmit={formik.handleSubmit}>
+          <ErrorAlert message={store.error}></ErrorAlert>
+
           <InputGroup
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             containerClassName="mt-4"
             label="Username"
             type="text"
+            name="username"
             placeholder="Enter Username"
             className="border outline-gray-700 outline outline-1"
+            error={getError("username")}
           ></InputGroup>
           <InputGroup
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             containerClassName="mt-4"
             label="Email"
+            name="email"
             type="email"
             placeholder="Enter email"
+            error={getError("email")}
             className="border outline-gray-700 outline outline-1"
           ></InputGroup>
           <InputGroup
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             label="Password"
             placeholder="Enter password"
             containerClassName="mt-4"
             type="password"
+            name="password"
+            error={getError("password")}
             className="border outline-gray-700 outline outline-1"
           ></InputGroup>
           <InputGroup
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             label="Confirm Password"
             placeholder="Enter password again"
             containerClassName="mt-4"
             type="password"
+            name="confirmPassword"
+            error={getError("confirmPassword")}
             className="border outline-gray-700 outline outline-1"
           ></InputGroup>
 
           <Button
             variant={"primary"}
             className="uppercase text-lg mt-12 w-full rounded-full h-14 font-semibold"
+            disabled={!formik.isValid}
           >
             Create account
           </Button>

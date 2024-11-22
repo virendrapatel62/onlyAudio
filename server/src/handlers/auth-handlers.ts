@@ -12,34 +12,49 @@ const router = express.Router();
 
 // @route   POST /api/auth/signup
 // @description    Register a new user
-router.post("/signup", async (request: Request, response: Response) => {
-  const body = authSignupBodySchema.validateSync(request.body, {
-    abortEarly: false,
-  });
-  const { username, email, password } = body;
-  const userExists = await User.findOne({ email });
-  if (userExists) {
-    response.status(400).json({ message: "User already exists" });
-    return;
-  }
+router.post(
+  "/signup",
+  handler(async (request: Request, response: Response) => {
+    const body = authSignupBodySchema.validateSync(request.body, {
+      abortEarly: false,
+    });
+    const { username, email, password } = body;
+    const [userExistsWithEmail, userExistsWithUserName] = await Promise.all([
+      User.findOne({
+        email,
+      }),
+      User.findOne({
+        username,
+      }),
+    ]);
 
-  // Create a new user
-  const newUser = new User({
-    username,
-    email,
-    password,
-  });
+    if (userExistsWithEmail) {
+      response.status(400).json({ message: "Email already exists" });
+      return;
+    }
+    if (userExistsWithUserName) {
+      response.status(400).json({ message: "Username already exists" });
+      return;
+    }
 
-  // Save the new user (password will be hashed automatically)
-  await newUser.save();
+    // Create a new user
+    const newUser = new User({
+      username,
+      email,
+      password,
+    });
 
-  // Generate JWT token
-  const payload = { userId: newUser._id };
-  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" }); // Token expires in 1 hour
+    // Save the new user (password will be hashed automatically)
+    await newUser.save();
 
-  // Send response with the JWT token
-  response.status(201).json({ message: "User created successfully", token });
-});
+    // Generate JWT token
+    const payload = { userId: newUser._id };
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" }); // Token expires in 1 hour
+
+    // Send response with the JWT token
+    response.status(201).json({ message: "User created successfully", token });
+  })
+);
 
 // @route   POST /api/auth/login
 // @desc    Login an existing user

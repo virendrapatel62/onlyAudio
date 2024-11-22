@@ -10,6 +10,7 @@ import DeviceFrame from "./components/frame";
 import LoginPage from "./pages/auth/login";
 import RegisterPage from "./pages/auth/register";
 import ResetPassword from "./pages/auth/reset-password";
+import BottomNavbar from "./components/bottom-nav";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <BrowserRouter>
         <div className="dark bg-gray-900 text-gray-200 min-h-dvh ">
           <Navbar />
+          <BottomNavbar />
           <main className="container mx-auto p-4 ">
             <Routes>
               <Route path="/" Component={HomePage}></Route>
