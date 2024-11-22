@@ -1,8 +1,28 @@
 import { Button } from "@/components/ui/button";
+import ErrorAlert from "@/components/ui/error-alert";
 import InputGroup from "@/components/ui/input-group";
-import { Link } from "react-router-dom";
+import { useAuthStore, useIsAuthenticated } from "@/stores/auth-store";
+import { FormEventHandler } from "react";
+import { Link, Navigate } from "react-router-dom";
 
 export default function LoginPage() {
+  const { login, error, isLoading } = useAuthStore();
+
+  const isAuthenticated = useIsAuthenticated();
+
+  const onFormSubmit: FormEventHandler = (event) => {
+    const form = event.target as HTMLFormElement;
+    const formValues = Object.fromEntries(new FormData(form).entries());
+    const { email, password } = formValues as any;
+
+    login(email, password);
+    event.preventDefault();
+  };
+
+  if (isAuthenticated) {
+    return <Navigate to={"/"} />;
+  }
+
   return (
     <div>
       <div className="text-center flex flex-col gap-5">
@@ -11,29 +31,36 @@ export default function LoginPage() {
           Welcome back to your favorite audio collaboration app!
         </p>
       </div>
-      <div className="m-4"></div>
 
       <div className="mt-4 m-4">
-        <form>
+        <form onSubmit={onFormSubmit}>
           <InputGroup
             containerClassName="mt-8"
             label="Email"
+            name="email"
             placeholder="Enter your email"
+            value={"patelvirendra62@gmail.com"}
             className="border outline-gray-700 outline outline-1"
           ></InputGroup>
           <InputGroup
             label="Password"
             placeholder="Enter your password"
+            name="password"
             containerClassName="mt-8"
             type="password"
+            value={"123456"}
             className="border outline-gray-700 outline outline-1"
           ></InputGroup>
 
+          <ErrorAlert message={error} />
+
           <Button
             variant={"primary"}
+            type="submit"
+            disabled={isLoading}
             className="uppercase text-lg mt-12 w-full rounded-full h-14 font-semibold"
           >
-            Sign In
+            {!isLoading ? "Sign In" : "Hold on!"}
           </Button>
 
           <div>

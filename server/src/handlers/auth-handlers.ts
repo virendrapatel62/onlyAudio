@@ -66,9 +66,11 @@ router.post(
 
     // Generate JWT token
     const payload = { userId: user._id };
+
     const token = jwt.sign(payload, JWT_SECRET);
+    console.log(user);
     // Send response with the JWT token
-    response.status(200).json({ message: "Login successful", token });
+    response.status(200).json({ message: "Login successful", token, user });
   })
 );
 

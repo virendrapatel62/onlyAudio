@@ -1,7 +1,17 @@
-import { AudioWaveform, DicesIcon, PodcastIcon, RadioIcon } from "lucide-react";
+import { useAuthStore, useIsAuthenticated } from "@/stores/auth-store";
+import {
+  AudioWaveform,
+  DicesIcon,
+  LogOutIcon,
+  PodcastIcon,
+  RadioIcon,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
+  const { logout } = useAuthStore();
+  const isAuthenticated = useIsAuthenticated();
+
   const pages = [
     {
       link: "/",
@@ -25,6 +35,15 @@ export default function Navbar() {
       title: <PodcastIcon />,
       hoverTitle: "My Creators",
     },
+
+    ...(isAuthenticated
+      ? [
+          {
+            title: <LogOutIcon onClick={logout} />,
+            hoverTitle: "My Creators",
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -36,7 +55,7 @@ export default function Navbar() {
             key={page.link}
             title={page.hoverTitle}
           >
-            <Link to={page.link}>{page.title}</Link>
+            <Link to={page.link ? page.link : "#"}>{page.title}</Link>
           </li>
         ))}
       </ul>

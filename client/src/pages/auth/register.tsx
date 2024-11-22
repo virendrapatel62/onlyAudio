@@ -1,8 +1,15 @@
 import { Button } from "@/components/ui/button";
 import InputGroup from "@/components/ui/input-group";
-import { Link } from "react-router-dom";
+import { useIsAuthenticated } from "@/stores/auth-store";
+import { Link, Navigate } from "react-router-dom";
 
 export default function RegisterPage() {
+  const isAuthenticated = useIsAuthenticated();
+
+  if (isAuthenticated) {
+    return <Navigate to={"/"} />;
+  }
+
   return (
     <div>
       <div className="text-center flex flex-col gap-5">

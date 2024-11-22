@@ -1,3 +1,5 @@
+import { useIsAuthenticated, useUser } from "@/stores/auth-store";
+import { Hand } from "lucide-react";
 import { Link } from "react-router-dom";
 
 function Button(props: { text: string; to: string }) {
@@ -12,6 +14,9 @@ function Button(props: { text: string; to: string }) {
 }
 
 export default function HomePage() {
+  const isAuthenticated = useIsAuthenticated();
+  const user = useUser();
+
   return (
     <div>
       <div className="h-[70vh] flex flex-col gap-12 items-center justify-center p-4">
@@ -19,10 +24,18 @@ export default function HomePage() {
           friends over followers
         </h1>
 
-        <div className="flex gap-8 justify-center items-center">
-          <Button to="/auth/login" text="Login"></Button>
-          <Button to="/auth/register" text="Register"></Button>
-        </div>
+        {isAuthenticated && (
+          <div className="flex gap-4 text-2xl items-center capitalize">
+            <Hand className="-rotate-12"></Hand>Hello {user?.username}
+          </div>
+        )}
+
+        {!isAuthenticated && (
+          <div className="flex gap-8 justify-center items-center">
+            <Button to="/auth/login" text="Login"></Button>
+            <Button to="/auth/register" text="Register"></Button>
+          </div>
+        )}
       </div>
     </div>
   );

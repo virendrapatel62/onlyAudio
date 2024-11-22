@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Model, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 import { Collections } from ".";
 
@@ -10,6 +10,8 @@ interface IUser extends Document {
   password: string;
   isValidPassword(password: string): Promise<boolean>;
 }
+
+interface IUserModel extends Model<IUser> {}
 
 const userSchema = new Schema<IUser>(
   {
@@ -40,6 +42,13 @@ const userSchema = new Schema<IUser>(
   },
   {
     timestamps: true,
+    toJSON: {
+      transform: function (doc, ret) {
+        delete ret.password;
+        delete ret.__v;
+        return ret;
+      },
+    },
   }
 );
 
@@ -60,6 +69,6 @@ userSchema.methods.isValidPassword = async function (
   return await bcrypt.compare(password, this.password);
 };
 
-const User = mongoose.model<IUser>(Collections.Users, userSchema);
+const User = mongoose.model<IUser, IUserModel>(Collections.Users, userSchema);
 
 export { User };
