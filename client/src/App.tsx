@@ -2,8 +2,8 @@ import "./socket";
 import { BrowserRouter } from "react-router-dom";
 import BottomNavbar from "./components/bottom-nav";
 import DeviceFrame from "./components/frame";
-import Navbar from "./components/navbar";
 import RouteSetup from "./providers/route-setup";
+import Navbar from "./components/navbar";
 
 function App() {
   return (

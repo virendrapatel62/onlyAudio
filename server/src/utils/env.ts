@@ -10,6 +10,12 @@ export const DB_CONFIG = {
   DB_NAME,
 } as const;
 
+export const REDIS = {
+  REDIS_HOST: getEnv("REDIS_HOST"),
+  REDIS_PORT: Number(getEnv("REDIS_PORT")),
+  REDIS_PASSWORD: getEnv("REDIS_PASSWORD"),
+} as const;
+
 export const APP_PORT = getEnv("APP_PORT");
 
 export const APP_ENV = getEnv("APP_ENV");

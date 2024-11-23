@@ -45,9 +45,9 @@ app.use("/api/explore", authMiddleware, exploreRouter);
 app.use(expressErrorHandler); // register at last
 
 server.listen(APP_PORT, () => {
-  logger.info(`APP is running on port ${APP_PORT}`);
-  logger.info(`Access the app at ${APP_DOMAIN}:${APP_PORT}`);
-  logger.info(`Ping the app at ${APP_DOMAIN}:${APP_PORT}/ping`);
+  logger.info(`APP is running on port ${APP_PORT} ✅`);
+  logger.info(`Access the app at ${APP_DOMAIN}:${APP_PORT} ✅`);
+  logger.info(`Ping the app at ${APP_DOMAIN}:${APP_PORT}/ping ✅`);
 });
 
 io.on(SocketEvents.connect, (socket: Socket) => {

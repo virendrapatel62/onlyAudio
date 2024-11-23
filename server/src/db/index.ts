@@ -7,7 +7,7 @@ const CONNECTION_URL = `mongodb+srv://${DB_CONFIG.DB_USERNAME}:${DB_CONFIG.DB_PA
 mongoose
   .connect(CONNECTION_URL)
   .then(() => {
-    logger.info(`MONGO DB Connected`);
+    logger.info(`MONGO DB Connected ✅`);
   })
   .catch((error) => {
     logger.error(error.message, error);

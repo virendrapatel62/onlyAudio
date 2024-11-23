@@ -3,9 +3,11 @@ import { ApiError } from "../utils/api-error";
 import { handler } from "../utils/handler-utils";
 import { verifyToken } from "../utils/jwt";
 import { AuthenticatedRequest } from "../types/express";
+import { User } from "@/models/user";
+import { cacheSessionUser, getCachedSessionUser } from "@/caching/session";
 
 const authMiddleware: RequestHandler = handler(
-  (request: AuthenticatedRequest, _, next) => {
+  async (request: AuthenticatedRequest, _, next) => {
     const token = request.headers.authorization;
     const sendUnauthorized = () =>
       next(
@@ -16,10 +18,23 @@ const authMiddleware: RequestHandler = handler(
 
     if (!token) return sendUnauthorized();
 
-    const payload = verifyToken(token);
+    const payload = verifyToken(token) as any;
     if (!payload) return sendUnauthorized();
 
-    request.user = payload;
+    const userid = payload.userId;
+
+    const user = await getCachedSessionUser(userid).then(async (user) => {
+      console.log({ cache: user });
+      if (!user) {
+        const _user = await User.findById(userid);
+        console.log({ _user, userid });
+        await cacheSessionUser(userid, _user?.toJSON());
+        return _user;
+      }
+      return user;
+    });
+
+    request.user = user;
     return next();
   }
 );

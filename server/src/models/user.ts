@@ -46,11 +46,17 @@ const userSchema = new Schema<IUser>(
       transform: function (doc, ret) {
         delete ret.password;
         delete ret.__v;
+        delete ret._d;
         return ret;
       },
+      virtuals: true,
     },
   }
 );
+
+userSchema.virtual("id").get(function () {
+  return String(this._id);
+});
 
 userSchema.pre<IUser>("save", async function (next) {
   if (!this.isModified("password")) return next(); // Only hash the password if it's new or modified
