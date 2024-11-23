@@ -15,6 +15,7 @@ import { registerViewerEvents } from "./socket/viewer-events";
 import { APP_DOMAIN, APP_PORT } from "./utils/env";
 import { logger } from "./utils/logger";
 import { SocketEvents } from "./utils/socket-events";
+import { exploreRouter } from "./handlers/search-handler";
 const app = express();
 
 const server = createServer(
@@ -36,6 +37,8 @@ app.use(cors());
 
 app.use(pingRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/explore", exploreRouter);
 
 app.use(expressErrorHandler); // register at last
 

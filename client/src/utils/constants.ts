@@ -18,4 +18,6 @@ export const PROFILE_PAGE: TemplateStringsFunction = (
 ) => {
   return `/profile/${stringUserName[0]?.trim() || username[0]}`;
 };
+
 export const HOME_PAGE_URL = "/";
+export const SEARCH_PAGE_URL = "/search";

@@ -5,6 +5,7 @@ import {
   PROFILE_PAGE,
   REGISTRATION_PAGE_URL,
   RESET_PASSWORD_PAGE_URL,
+  SEARCH_PAGE_URL,
 } from "@/utils/constants";
 import PageProviders from "./page-provider";
 import HomePage from "@/pages/homepage";
@@ -16,6 +17,7 @@ import ResetPassword from "@/pages/auth/reset-password";
 import LoginPage from "@/pages/auth/login";
 import RegisterPage from "@/pages/auth/register";
 import ProfilePage from "@/pages/profile";
+import SearchPage from "@/pages/search-page";
 
 export default function RouteSetup() {
   return (
@@ -42,12 +44,19 @@ export default function RouteSetup() {
         path="/join-live/:creator"
         element={<PageProviders Component={JoinTheLive} authenticatedPage />}
       ></Route>
+      <Route
+        path={SEARCH_PAGE_URL}
+        element={<PageProviders Component={SearchPage} authenticatedPage />}
+      ></Route>
+      <Route
+        path={PROFILE_PAGE`:username`}
+        element={<PageProviders Component={ProfilePage} authenticatedPage />}
+      ></Route>
 
       <Route path="/auth" element={<Navigate to={LOGIN_PAGE_URL} />}></Route>
       <Route path={LOGIN_PAGE_URL} Component={LoginPage}></Route>
       <Route path={RESET_PASSWORD_PAGE_URL} Component={ResetPassword}></Route>
       <Route path={REGISTRATION_PAGE_URL} Component={RegisterPage}></Route>
-      <Route path={PROFILE_PAGE`:username`} Component={ProfilePage}></Route>
     </Routes>
   );
 }

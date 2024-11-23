@@ -1,6 +1,6 @@
 import { useAuthStore, useIsAuthenticated, useUser } from "@/stores/auth-store";
-import { PROFILE_PAGE } from "@/utils/constants";
-import { HomeIcon, MicIcon, UserIcon } from "lucide-react";
+import { PROFILE_PAGE, SEARCH_PAGE_URL } from "@/utils/constants";
+import { HomeIcon, MicIcon, SearchIcon, UserIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
 
@@ -19,6 +19,11 @@ export default function BottomNavbar() {
       title: <MicIcon />,
       hoverTitle: "Talk to followers",
     },
+    {
+      link: SEARCH_PAGE_URL,
+      title: <SearchIcon />,
+      hoverTitle: "Search",
+    },
   ];
 
   if (user) {
@@ -28,8 +33,6 @@ export default function BottomNavbar() {
       hoverTitle: "My Profile",
     });
   }
-
-  console.log(tabs);
 
   if (!isAuthenticated) return <Fragment></Fragment>;
 

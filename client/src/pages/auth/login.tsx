@@ -26,8 +26,6 @@ export default function LoginPage() {
     event.preventDefault();
   };
 
-  console.log({ isAuthenticated });
-
   if (isAuthenticated) {
     return <Navigate to={returnTo} />;
   }
