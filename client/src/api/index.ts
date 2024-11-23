@@ -1,5 +1,6 @@
+import { getAuthenticationTokenCookie } from "@/utils/cookies";
 import { API_BASE_URL } from "@/utils/env";
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -24,15 +25,20 @@ export class ApiError extends Error {
   }
 }
 
-api.interceptors.response.use(
-  (response: AxiosResponse) => {
-    return response;
-  },
-  (error: AxiosError) => {
-    const apiError = new ApiError(error);
+function errorResponseManipulator(error: AxiosError) {
+  const apiError = new ApiError(error);
+  throw apiError;
+}
 
-    throw apiError;
+const authTokenInjector = (config: InternalAxiosRequestConfig) => {
+  const token = getAuthenticationTokenCookie();
+  if (token) {
+    config.headers["Authorization"] = token;
   }
-);
+  return config;
+};
+
+api.interceptors.request.use(authTokenInjector);
+api.interceptors.response.use((response) => response, errorResponseManipulator);
 
 export default api;

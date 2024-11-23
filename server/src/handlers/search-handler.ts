@@ -12,6 +12,7 @@ export const exploreRouter = express.Router();
 export const searchHandler: RequestHandler = handler((request, response) => {
   const query = request.query.query;
   const serachFields = ["username", "firstName", "lastName"];
+  console.log(request.headers);
 
   User.find({
     $or: serachFields.map((field) => ({
