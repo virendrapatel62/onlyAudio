@@ -1,33 +1,37 @@
-import { RequestHandler } from "express";
+import { Locals, RequestHandler } from "express";
 import { User } from "../models/user";
 import { handler } from "../utils/handler-utils";
 
 import express from "express";
+import { AuthenticatedRequest } from "../types/express";
 
 export const exploreRouter = express.Router();
 
 /**
  * @route /api/explore/search
  */
-export const searchHandler: RequestHandler = handler((request, response) => {
-  const query = request.query.query;
-  const serachFields = ["username", "firstName", "lastName"];
-  console.log(request.headers);
+export const searchHandler: RequestHandler = handler(
+  (request: AuthenticatedRequest, response) => {
+    const query = request.query.query;
+    const serachFields = ["username", "firstName", "lastName"];
 
-  User.find({
-    $or: serachFields.map((field) => ({
-      [field]: {
-        $regex: query,
-        $options: "i",
-      },
-    })),
-  })
-    .limit(20)
-    .then((results) => {
-      response.json({
-        results,
+    console.log(request.user);
+
+    User.find({
+      $or: serachFields.map((field) => ({
+        [field]: {
+          $regex: query,
+          $options: "i",
+        },
+      })),
+    })
+      .limit(20)
+      .then((results) => {
+        response.json({
+          results,
+        });
       });
-    });
-});
+  }
+);
 
 exploreRouter.get("/search", searchHandler);

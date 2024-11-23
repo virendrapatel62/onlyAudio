@@ -1,3 +1,4 @@
+import "@/caching/index";
 import cors from "cors";
 import express from "express";
 import fs from "fs";
@@ -9,13 +10,14 @@ import { getActiveCreatorUserNames } from "./data";
 import { authRouter } from "./handlers/auth-handlers";
 import { expressErrorHandler } from "./handlers/error-handlers";
 import { pingRouter } from "./handlers/ping";
+import { exploreRouter } from "./handlers/search-handler";
+import authMiddleware from "./middlewares/auth-middleware";
 import { registerCreatorEvents } from "./socket/creator-events";
 import { registerIceEvents } from "./socket/ice-events";
 import { registerViewerEvents } from "./socket/viewer-events";
 import { APP_DOMAIN, APP_PORT } from "./utils/env";
 import { logger } from "./utils/logger";
 import { SocketEvents } from "./utils/socket-events";
-import { exploreRouter } from "./handlers/search-handler";
 const app = express();
 
 const server = createServer(
@@ -38,7 +40,7 @@ app.use(cors());
 app.use(pingRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/explore", exploreRouter);
+app.use("/api/explore", authMiddleware, exploreRouter);
 
 app.use(expressErrorHandler); // register at last
 
