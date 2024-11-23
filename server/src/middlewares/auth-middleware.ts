@@ -24,17 +24,15 @@ const authMiddleware: RequestHandler = handler(
     const userid = payload.userId;
 
     const user = await getCachedSessionUser(userid).then(async (user) => {
-      console.log({ cache: user });
       if (!user) {
         const _user = await User.findById(userid);
-        console.log({ _user, userid });
         await cacheSessionUser(userid, _user?.toJSON());
         return _user;
       }
       return user;
     });
-
     request.user = user;
+
     return next();
   }
 );

@@ -8,8 +8,6 @@ export const expressErrorHandler: ErrorRequestHandler = (
   response: Response,
   next: NextFunction
 ) => {
-  console.log(error);
-
   let statusCode = 500;
   let _response: any = {
     message: error.message,

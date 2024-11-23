@@ -15,8 +15,6 @@ export const searchHandler: RequestHandler = handler(
     const query = request.query.query;
     const serachFields = ["username", "firstName", "lastName"];
 
-    console.log(request.user);
-
     User.find({
       $or: serachFields.map((field) => ({
         [field]: {
