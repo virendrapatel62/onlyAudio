@@ -22,9 +22,18 @@ interface IAuthStore {
   logout(): void;
 }
 
+const toBePersistedKeys: (keyof IAuthStore)[] = ["user", "token"];
+
 const persistOptions: PersistOptions<IAuthStore> = {
   name: "auth",
   storage: createJSONStorage(() => localStorage),
+  partialize(state) {
+    return Object.fromEntries(
+      Object.entries(state).filter(([key]) =>
+        (toBePersistedKeys as string[]).includes(key)
+      )
+    ) as IAuthStore;
+  },
 };
 
 export const useAuthStore = create<IAuthStore>()(

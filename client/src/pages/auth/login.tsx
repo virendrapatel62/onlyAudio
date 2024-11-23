@@ -2,13 +2,20 @@ import { Button } from "@/components/ui/button";
 import ErrorAlert from "@/components/ui/error-alert";
 import InputGroup from "@/components/ui/input-group";
 import { useAuthStore, useIsAuthenticated } from "@/stores/auth-store";
+import {
+  HOME_PAGE_URL,
+  REGISTRATION_PAGE_URL,
+  RESET_PASSWORD_PAGE_URL,
+} from "@/utils/constants";
 import { FormEventHandler } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useSearchParams } from "react-router-dom";
 
 export default function LoginPage() {
   const { login, error, isLoading } = useAuthStore();
 
   const isAuthenticated = useIsAuthenticated();
+  const [searchParams] = useSearchParams();
+  const returnTo = searchParams.get("return_to") || HOME_PAGE_URL;
 
   const onFormSubmit: FormEventHandler = (event) => {
     const form = event.target as HTMLFormElement;
@@ -19,8 +26,10 @@ export default function LoginPage() {
     event.preventDefault();
   };
 
+  console.log({ isAuthenticated });
+
   if (isAuthenticated) {
-    return <Navigate to={"/"} />;
+    return <Navigate to={returnTo} />;
   }
 
   return (
@@ -66,7 +75,7 @@ export default function LoginPage() {
           <div>
             <div className="text-center mt-8 text-gray-400">
               <Link
-                to={"/auth/reset-password"}
+                to={RESET_PASSWORD_PAGE_URL}
                 className="border-b pb-1 border-gray-600 w-fit"
               >
                 Forgot your password?
@@ -75,7 +84,7 @@ export default function LoginPage() {
 
             <div className="text-center mt-8 text-gray-400">
               <Link
-                to={"/auth/register"}
+                to={REGISTRATION_PAGE_URL}
                 className="border-b pb-1 border-gray-600 w-fit"
               >
                 Do not have an acoount? Create now!

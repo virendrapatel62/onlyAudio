@@ -1,16 +1,9 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import Playground from "./pages/playground";
 import "./socket";
-import CreatorGoLivePage from "./pages/creator-go-live";
-import HomePage from "./pages/homepage";
-import MyCreators from "./pages/my-creators";
-import Navbar from "./components/navbar";
-import JoinTheLive from "./pages/join-live";
-import DeviceFrame from "./components/frame";
-import LoginPage from "./pages/auth/login";
-import RegisterPage from "./pages/auth/register";
-import ResetPassword from "./pages/auth/reset-password";
+import { BrowserRouter } from "react-router-dom";
 import BottomNavbar from "./components/bottom-nav";
+import DeviceFrame from "./components/frame";
+import Navbar from "./components/navbar";
+import RouteSetup from "./providers/route-setup";
 
 function App() {
   return (
@@ -20,24 +13,7 @@ function App() {
           <Navbar />
           <BottomNavbar />
           <main className="container mx-auto p-4 ">
-            <Routes>
-              <Route path="/" Component={HomePage}></Route>
-              <Route path="/go-live" Component={CreatorGoLivePage}></Route>
-              <Route path="/playground" Component={Playground}></Route>
-              <Route path="/my-creators" Component={MyCreators}></Route>
-              <Route path="/join-live/:creator" Component={JoinTheLive}></Route>
-
-              <Route
-                path="/auth"
-                element={<Navigate to={"/auth/login"} />}
-              ></Route>
-              <Route path="/auth/login" Component={LoginPage}></Route>
-              <Route
-                path="/auth/reset-password"
-                Component={ResetPassword}
-              ></Route>
-              <Route path="/auth/register" Component={RegisterPage}></Route>
-            </Routes>
+            <RouteSetup></RouteSetup>
           </main>
         </div>
       </BrowserRouter>

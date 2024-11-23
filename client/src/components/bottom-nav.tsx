@@ -1,4 +1,5 @@
-import { useAuthStore, useIsAuthenticated } from "@/stores/auth-store";
+import { useAuthStore, useIsAuthenticated, useUser } from "@/stores/auth-store";
+import { PROFILE_PAGE } from "@/utils/constants";
 import { HomeIcon, MicIcon, UserIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
@@ -6,6 +7,7 @@ import { Fragment } from "react/jsx-runtime";
 export default function BottomNavbar() {
   const { logout } = useAuthStore();
   const isAuthenticated = useIsAuthenticated();
+  const user = useUser();
   const tabs = [
     {
       link: "/",
@@ -17,12 +19,17 @@ export default function BottomNavbar() {
       title: <MicIcon />,
       hoverTitle: "Talk to followers",
     },
-    {
-      link: "/profile",
+  ];
+
+  if (user) {
+    tabs.push({
+      link: PROFILE_PAGE`${user?.username}`,
       title: <UserIcon />,
       hoverTitle: "My Profile",
-    },
-  ];
+    });
+  }
+
+  console.log(tabs);
 
   if (!isAuthenticated) return <Fragment></Fragment>;
 

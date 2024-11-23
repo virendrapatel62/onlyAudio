@@ -1,4 +1,4 @@
-export default function PendingWork() {
+export default function PendingWork(props: { title?: string }) {
   return (
     <div className="text-center p-8 flex flex-col gap-8 justify-center items-center min-h-96">
       <img
@@ -7,7 +7,7 @@ export default function PendingWork() {
         alt=""
       />
       <div className="text-lg">
-        We're crafting something awesome — hang in there!
+        We're crafting {props.title || "something awesome"} — hang in there!
       </div>
     </div>
   );

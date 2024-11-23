@@ -9,6 +9,7 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import { IRegisterParams } from "@/api/auth";
 import ErrorAlert from "@/components/ui/error-alert";
+import { LOGIN_PAGE_URL } from "@/utils/constants";
 
 const formDataValidationSchema = yup.object().shape({
   email: yup.string().email().required().label("Email"),
@@ -130,7 +131,7 @@ export default function RegisterPage() {
 
           <div className="text-center mt-4 text-gray-400">
             <Link
-              to={"/auth/login"}
+              to={LOGIN_PAGE_URL}
               className="border-b pb-1 border-gray-600 w-fit"
             >
               Already have an account?
