@@ -1,23 +1,21 @@
 import "@/caching/index";
+import { authRouter } from "@/handlers/auth-handlers";
+import { expressErrorHandler } from "@/handlers/error-handlers";
+import { pingRouter } from "@/handlers/ping";
+import { exploreRouter } from "@/handlers/search-handler";
+import { logger } from "@/utils/logger";
+import { SocketEvents } from "@/utils/socket-events";
 import cors from "cors";
 import express from "express";
 import fs from "fs";
 import { createServer } from "https";
 import morgan from "morgan";
 import path from "path";
-import { Server, Socket } from "socket.io";
-import { getActiveCreatorUserNames } from "./data";
-import { authRouter } from "./handlers/auth-handlers";
-import { expressErrorHandler } from "./handlers/error-handlers";
-import { pingRouter } from "./handlers/ping";
-import { exploreRouter } from "./handlers/search-handler";
+import { Server } from "socket.io";
 import authMiddleware from "./middlewares/auth-middleware";
-import { registerCreatorEvents } from "./socket/creator-events";
-import { registerIceEvents } from "./socket/ice-events";
-import { registerViewerEvents } from "./socket/viewer-events";
 import { APP_DOMAIN, APP_PORT } from "./utils/env";
-import { logger } from "./utils/logger";
-import { SocketEvents } from "./utils/socket-events";
+import onNewConnection, { socketAuthMiddleware } from "@/events/init";
+import { userRouter } from "./handlers/user-handlers";
 const app = express();
 
 const server = createServer(
@@ -39,8 +37,8 @@ app.use(cors());
 
 app.use(pingRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/auth", authRouter);
 app.use("/api/explore", authMiddleware, exploreRouter);
+app.use("/api/users", authMiddleware, userRouter);
 
 app.use(expressErrorHandler); // register at last
 
@@ -50,12 +48,7 @@ server.listen(APP_PORT, () => {
   logger.info(`Ping the app at ${APP_DOMAIN}:${APP_PORT}/ping ✅`);
 });
 
-io.on(SocketEvents.connect, (socket: Socket) => {
-  logger.info("New Socket connection..");
-  registerCreatorEvents(socket);
-  registerViewerEvents(socket);
-  registerIceEvents(socket);
-  socket.emit(SocketEvents.onActiveCrators, getActiveCreatorUserNames());
-});
+io.use(socketAuthMiddleware);
+io.on(SocketEvents.connect, onNewConnection);
 
 export { app, io };

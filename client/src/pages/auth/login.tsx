@@ -46,7 +46,6 @@ export default function LoginPage() {
             label="Email"
             name="email"
             placeholder="Enter your email"
-            value={"patelvirendra62@gmail.com"}
             className="border outline-gray-700 outline outline-1"
           ></InputGroup>
           <InputGroup
@@ -55,7 +54,6 @@ export default function LoginPage() {
             name="password"
             containerClassName="mt-8"
             type="password"
-            value={"123456"}
             className="border outline-gray-700 outline outline-1"
           ></InputGroup>
 

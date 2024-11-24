@@ -1,6 +1,9 @@
 import { ApiError } from "@/api";
 import { login } from "@/api/auth";
-import { setAuthenticationTokenCookie } from "@/utils/cookies";
+import {
+  deleteAuthenticationTokenCookie,
+  setAuthenticationTokenCookie,
+} from "@/utils/cookies";
 import { create } from "zustand";
 import { createJSONStorage, persist, PersistOptions } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -75,7 +78,10 @@ export const useAuthStore = create<IAuthStore>()(
           });
       },
 
-      logout: () => set({ user: null, token: null }),
+      logout: () => {
+        set({ user: null, token: null });
+        deleteAuthenticationTokenCookie();
+      },
     })),
     persistOptions
   )

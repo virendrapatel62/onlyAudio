@@ -1,8 +1,9 @@
+import { getUser } from "@/api/user";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
 export type TJoinLiveStore = {
-  creator: string;
+  streamer: any;
   username: string;
   peerConnection: RTCPeerConnection | null;
   offer: RTCSessionDescriptionInit | null;
@@ -11,6 +12,7 @@ export type TJoinLiveStore = {
   setCreatorName(username: string): void;
   setPeerConnection(peerConnection: RTCPeerConnection): void;
   setOffer(offer: RTCSessionDescriptionInit): void;
+  fetchStreamerInfo: (username: string) => void;
 };
 
 export const useJoinLiveStore = create<TJoinLiveStore>()(
@@ -26,9 +28,14 @@ export const useJoinLiveStore = create<TJoinLiveStore>()(
           state.remoteStream = stream;
         });
       },
-      setCreatorName(username) {
+
+      async fetchStreamerInfo(username) {
+        const response = await getUser({
+          username,
+        });
+
         set((s) => {
-          s.creator = username;
+          s.streamer = response.user;
         });
       },
 

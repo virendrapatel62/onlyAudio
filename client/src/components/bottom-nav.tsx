@@ -37,7 +37,7 @@ export default function BottomNavbar() {
   if (!isAuthenticated) return <Fragment></Fragment>;
 
   return (
-    <nav className="p-3 absolute bottom-0 left-0 right-0 bg-gray-950 shadow-sm">
+    <nav className="p-3 fixed bottom-0 left-0 right-0 bg-gray-950 shadow-sm">
       <ul className="flex flex-wrap gap-4 items-center justify-evenly">
         {tabs.map((page) => (
           <li

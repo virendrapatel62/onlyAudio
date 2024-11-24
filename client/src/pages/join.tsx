@@ -1,22 +1,22 @@
-import { emitOffer, io } from "@/socket";
+import { Button } from "@/components/ui/button";
+import { io } from "@/socket";
+import { useUser } from "@/stores/auth-store";
 import { useJoinLiveStore } from "@/stores/join-live-store";
 import { peerConnectionConfig } from "@/utils/peer-connection-config";
 import { SocketEvents } from "@/utils/socket-events";
-import { getUserMedia } from "@/utils/web-rtc";
-import { ConeIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
-export default function JoinTheLive() {
+export default function JoinStream() {
   const store = useJoinLiveStore();
-  const params = useParams();
-  const creator = params.creator;
-  const remoteVideo = useRef<HTMLVideoElement>(null);
 
+  const user = useUser();
+  const params = useParams();
+  const streamerUsername = params.username;
+  const remoteVideo = useRef<HTMLVideoElement>(null);
   const [haveTracks, setHaveTracks] = useState(false);
 
   useEffect(() => {
-    console.log(remoteVideo.current, store.remoteStream);
     if (remoteVideo.current) {
       remoteVideo.current.srcObject = store.remoteStream;
       remoteVideo.current.play();
@@ -25,23 +25,19 @@ export default function JoinTheLive() {
 
   console.log({ haveTracks });
 
-  async function setup(creator: string) {
+  async function setup(remoteUser: string) {
     const connection = new RTCPeerConnection(peerConnectionConfig);
 
     io.emit(SocketEvents.onAskForOffer, {
-      creator,
+      remoteUser,
     });
 
     connection.addEventListener("icecandidate", (e) => {
-      console.log("SEINDIGN ICE");
-
-      io.emit(SocketEvents.onIceCandidate, {
-        creator: creator,
-        icecandidate: e.candidate,
-      });
+      console.log("Listener is not sending ice..");
     });
 
     connection.addEventListener("track", (e) => {
+      console.log(e.streams);
       const m = new MediaStream();
       e.streams[0].getTracks().forEach((t) => {
         m?.addTrack(t);
@@ -49,56 +45,61 @@ export default function JoinTheLive() {
       store.setRemoteStream(m);
       setHaveTracks(true);
     });
+
     connection.addEventListener("connectionstatechange", (e) => {
       console.log("COnnection state  : ", connection.connectionState);
     });
 
-    io.on(SocketEvents.onOffer, async (data) => {
-      console.log("Got the offer");
+    io.on(SocketEvents.onOffer, async (data: any) => {
       const { offer } = data;
       connection.setRemoteDescription(offer);
-      console.log("Creating Answer");
       const answer = await connection.createAnswer();
-
       connection.setLocalDescription(answer);
 
       io.emit(SocketEvents.onAnswer, {
-        creator,
+        remoteUser,
         answer,
       });
     });
-    io.on(SocketEvents.onIceCandidate, (data) => {
+    io.on(SocketEvents.onIceCandidate, (data: any) => {
       const icecandidate = data.icecandidate;
-
-      console.log("GOT THE ICE");
-
       if (icecandidate) {
         connection.addIceCandidate(icecandidate);
       }
     });
   }
 
+  function onJoinStream() {
+    store.streamer?.id && setup(store.streamer?.id || "");
+  }
+
+  useEffect(() => {}, [store.streamer]);
+
   useEffect(() => {
-    store.setCreatorName(creator as string);
-    (async () => {
-      setup(creator || "");
-    })();
-  }, [creator]);
+    params.username && store.fetchStreamerInfo(params.username);
+  }, [params.username]);
 
   return (
     <div>
       <h1 className="text-xl text-center shadow shadow-gray-600 p-4 rounded">
         You Are Joing the live of{" "}
-        <strong className="text-2xl">{store.creator}</strong>
+        <strong className="text-2xl">{streamerUsername}</strong>
+        <hr />
+        <strong className="text-2xl">{user?.id}</strong>
       </h1>
 
-      <div>
-        <video
-          className="h-full w-full aspect-vertical-video"
-          ref={remoteVideo}
-          autoPlay
-          controls
-        ></video>
+      <div className="p-4 h-96 flex justify-center items-center">
+        {haveTracks ? (
+          <video
+            className="w-full aspect-vertical-video"
+            ref={remoteVideo}
+            autoPlay
+          ></video>
+        ) : (
+          <Button onClick={onJoinStream} className="rounded-full">
+            Join The Audio
+          </Button>
+        )}
       </div>
     </div>
   );

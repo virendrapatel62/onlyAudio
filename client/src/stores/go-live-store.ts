@@ -2,22 +2,26 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
 export type TGoLiveStore = {
-  username: string;
   localStream: MediaStream | null;
   setLocalStream: (stream: MediaStream) => void;
   connections: Record<string, RTCPeerConnection>; // viewer user : Connection
   addNewConnection(params: {
-    viewer: string;
+    remoteUser: string;
     connection: RTCPeerConnection;
   }): void;
+  reset(): void;
+};
+
+const initialState: Partial<TGoLiveStore> = {
+  connections: {},
+  localStream: null,
 };
 
 export const useGoLiveStore = create<TGoLiveStore>()(
   immer((set) => {
     return {
-      username: "pranv-nachaniya",
+      ...initialState,
       localStream: null,
-
       setLocalStream(stream) {
         set((state) => {
           state.localStream = stream;
@@ -25,10 +29,14 @@ export const useGoLiveStore = create<TGoLiveStore>()(
       },
       addNewConnection(params) {
         set((s) => {
-          s.connections[params.viewer] = params.connection;
+          console.log(params.connection.connectionState);
+          s.connections[params.remoteUser] = params.connection;
         });
       },
       connections: {},
+      reset() {
+        set(initialState);
+      },
     };
   })
 );

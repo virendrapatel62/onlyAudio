@@ -11,3 +11,6 @@ export function setAuthenticationTokenCookie(token: string) {
 export function getAuthenticationTokenCookie() {
   return Cookies.get(TOKEN_COOKIE_KEY);
 }
+export function deleteAuthenticationTokenCookie() {
+  return Cookies.remove(TOKEN_COOKIE_KEY);
+}
