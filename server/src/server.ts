@@ -31,6 +31,7 @@ const io = new Server(server, {
   },
 });
 
+app.use(express.static(path.join(__dirname, "../client")));
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
@@ -39,6 +40,11 @@ app.use(pingRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/explore", authMiddleware, exploreRouter);
 app.use("/api/users", authMiddleware, userRouter);
+
+app.get("*", (req, res) => {
+  const pathName = path.join(__dirname, "../client/index.html");
+  res.sendFile(pathName);
+});
 
 app.use(expressErrorHandler); // register at last
 

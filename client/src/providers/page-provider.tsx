@@ -1,11 +1,6 @@
 import { useIsAuthenticated } from "@/stores/auth-store";
 import { LOGIN_PAGE_URL } from "@/utils/constants";
-import React, {
-  Fragment,
-  PropsWithChildren,
-  ReactComponentElement,
-  ReactNode,
-} from "react";
+import { Fragment, ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 
 interface IPageProviderProps {

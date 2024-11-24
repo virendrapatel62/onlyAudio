@@ -9,7 +9,6 @@ export type TJoinLiveStore = {
   offer: RTCSessionDescriptionInit | null;
   remoteStream: MediaStream | null;
   setRemoteStream: (stream: MediaStream) => void;
-  setCreatorName(username: string): void;
   setPeerConnection(peerConnection: RTCPeerConnection): void;
   setOffer(offer: RTCSessionDescriptionInit): void;
   fetchStreamerInfo: (username: string) => void;
@@ -20,6 +19,7 @@ export const useJoinLiveStore = create<TJoinLiveStore>()(
     return {
       username: "virendra",
       creator: "",
+      streamer: null,
       peerConnection: null,
       remoteStream: new MediaStream(),
       offer: null,

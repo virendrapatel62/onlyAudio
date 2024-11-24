@@ -2,7 +2,6 @@ import { ApiError } from "@/api";
 import { search } from "@/api/search";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import debounce from "lodash.debounce";
 
 interface IAuthStore {
   isLoading: boolean;
