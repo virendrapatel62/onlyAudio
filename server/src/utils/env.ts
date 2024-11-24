@@ -16,7 +16,7 @@ export const REDIS = {
   REDIS_PASSWORD: getEnv("REDIS_PASSWORD"),
 } as const;
 
-export const APP_PORT = getEnv("APP_PORT");
+export const APP_PORT = getEnv("APP_PORT") || 4000;
 
 export const APP_ENV = getEnv("APP_ENV");
 export const APP_DOMAIN = getEnv("APP_DOMAIN");
